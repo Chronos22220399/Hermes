@@ -1,13 +1,18 @@
-#include "include/RegisterView.h"
+#include "../datas/include/admin.h"
+#include <fmt/format.h>
+#include <sqlpp11/sqlite3/connection.h>
 
 int main() {
-  crow::SimpleApp app;
-  RegisterView regist;
+  sqlpp::sqlite3::connection_config config;
+  config.path_to_database = "./datas/sqlite";
+  config.debug = false;
 
-  CROW_ROUTE(app, "/register")
-      .methods("POST"_method)(
-          std::bind(&RegisterView::regist, &regist, std::placeholders::_1));
-
-  app.port(17800).run();
+  try {
+    sqlpp::sqlite3::connection db{config};
+    Admin::Admin admin;
+    db.execute(R"()");
+  } catch (const std::exception &e) {
+    fmt::println(e.what());
+  }
   return 0;
 }

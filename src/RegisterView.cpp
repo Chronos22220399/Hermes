@@ -1,6 +1,10 @@
 #include "../include/RegisterView.h"
 #include "../include/Encrypter.h"
 #include <fmt/format.h>
+#include <sqlpp11/sqlite3/connection.h>
+
+void save_userinfo(const std::string &hashed_username,
+                   const std::string &hashed_password) {}
 
 // Register
 crow::response RegisterView::regist(const crow::request &req) {
