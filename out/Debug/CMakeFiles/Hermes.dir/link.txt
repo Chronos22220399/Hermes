@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -Wl,--dependency-file=CMakeFiles/Hermes.dir/link.d CMakeFiles/Hermes.dir/main.cpp.o CMakeFiles/Hermes.dir/src/Encrypter.cpp.o CMakeFiles/Hermes.dir/src/LoginView.cpp.o CMakeFiles/Hermes.dir/src/RegisterView.cpp.o CMakeFiles/Hermes.dir/src/Sqlite3.cpp.o -o Hermes  /usr/lib/libsodium.so /usr/lib/libspdlog.so.1.15.0 /usr/lib/libsqlite3.so /usr/lib/libfmt.so.11.1.1

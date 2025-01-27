@@ -13,21 +13,20 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-# set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ~/.install)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
-# set(CMAKE_PREFIX_PATH "/usr/local/lib/cmake/Sqlpp11")
+set(CMAKE_PREFIX_PATH "/usr/local/lib/cmake/Sqlpp11")
 
 find_package(fmt REQUIRED)
-# sqlpp11
-find_package(sqlpp11 REQUIRED CONFIG)
-# find_package(sqlpp11SQLite3 REQUIRED CONFIG) if(NOT Sqlpp11SQLite3_FOUND)
-# message(FATAL_ERROR "Sqlpp11SQLite3 not found!") endif()
-
+find_package(spdlog REQUIRED)
 find_package(Sodium REQUIRED)
+find_package(Sqlpp11 REQUIRED CONFIG)
+find_package(Sqlpp11SQLite3 REQUIRED CONFIG)
+if(NOT Sqlpp11SQLite3_FOUND)
+  message(FATAL_ERROR "Sqlpp11SQLite3 not found!")
+endif()
 
 file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp
-     ${CMAKE_SOURCE_DIR}/test/*.hpp)
-
+     ${CMAKE_SOURCE_DIR}/test/*.hpp ${CMAKE_SOURCE_DIR}/include/*.hpp)
 file(GLOB_RECURSE INCLUDES ${CMAKE_SOURCE_DIR}/include/*.h)
 
 add_executable(${CMAKE_PROJECT_NAME} main.cpp ${SOURCES})
@@ -39,8 +38,7 @@ target_link_libraries(
   PRIVATE # ${LEVELDB_LIBRARIES}/libleveldb.dylib ${LEVELDB_LIBRARIES} leveldb
           # ${INCLUDES}
           fmt::fmt ${sodium_LIBRARY_DEBUG} # 手动找到的库路径
-          # sqlpp11::sqlpp11
-)
+          sqlpp11::sqlpp11 sqlpp11::sqlite3 spdlog::spdlog)
 
 target_include_directories(
   ${PROJECT_NAME}
@@ -49,9 +47,11 @@ target_include_directories(
 
 target_compile_options(
   ${PROJECT_NAME}
-  PRIVATE -O0
-          -Wall # 打开所有警告
-          # -Wextra      # 打开额外的警告
-          -Werror # 将警告视为错误
+  PRIVATE -O0 -Wall # 打开所有警告
+          # -Wextra      # 打开额外的警告 -Werror # 将警告视为错误
           -pedantic # 启用严格的 C++ 标准
 )
+
+# include_directories(${SQLite3_INCLUDE_DIRS})
+# target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${SQLite3_LIBRARIES})
+# add_definitions(-DSQLPP11_PREPARED_STATEMENT_SIMPLE)

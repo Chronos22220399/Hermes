@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/home/Ess/Code/Cpp/Essearch/Hermes/out/Debug",
+  "command": "/usr/bin/c++ -DFMT_SHARED -DONLY_C_LOCALE=0 -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/home/Ess/Code/Cpp/Essearch/Hermes/include -I/home/Ess/Code/Cpp/Essearch/Hermes/sqlpp11::sqlpp11 -g -std=c++17 -O0 -Wall -pedantic -o CMakeFiles/Hermes.dir/main.cpp.o -c /home/Ess/Code/Cpp/Essearch/Hermes/main.cpp",
+  "file": "/home/Ess/Code/Cpp/Essearch/Hermes/main.cpp",
+  "output": "CMakeFiles/Hermes.dir/main.cpp.o"
+},
+{
+  "directory": "/home/Ess/Code/Cpp/Essearch/Hermes/out/Debug",
+  "command": "/usr/bin/c++ -DFMT_SHARED -DONLY_C_LOCALE=0 -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/home/Ess/Code/Cpp/Essearch/Hermes/include -I/home/Ess/Code/Cpp/Essearch/Hermes/sqlpp11::sqlpp11 -g -std=c++17 -O0 -Wall -pedantic -o CMakeFiles/Hermes.dir/src/Encrypter.cpp.o -c /home/Ess/Code/Cpp/Essearch/Hermes/src/Encrypter.cpp",
+  "file": "/home/Ess/Code/Cpp/Essearch/Hermes/src/Encrypter.cpp",
+  "output": "CMakeFiles/Hermes.dir/src/Encrypter.cpp.o"
+},
+{
+  "directory": "/home/Ess/Code/Cpp/Essearch/Hermes/out/Debug",
+  "command": "/usr/bin/c++ -DFMT_SHARED -DONLY_C_LOCALE=0 -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/home/Ess/Code/Cpp/Essearch/Hermes/include -I/home/Ess/Code/Cpp/Essearch/Hermes/sqlpp11::sqlpp11 -g -std=c++17 -O0 -Wall -pedantic -o CMakeFiles/Hermes.dir/src/LoginView.cpp.o -c /home/Ess/Code/Cpp/Essearch/Hermes/src/LoginView.cpp",
+  "file": "/home/Ess/Code/Cpp/Essearch/Hermes/src/LoginView.cpp",
+  "output": "CMakeFiles/Hermes.dir/src/LoginView.cpp.o"
+},
+{
+  "directory": "/home/Ess/Code/Cpp/Essearch/Hermes/out/Debug",
+  "command": "/usr/bin/c++ -DFMT_SHARED -DONLY_C_LOCALE=0 -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/home/Ess/Code/Cpp/Essearch/Hermes/include -I/home/Ess/Code/Cpp/Essearch/Hermes/sqlpp11::sqlpp11 -g -std=c++17 -O0 -Wall -pedantic -o CMakeFiles/Hermes.dir/src/RegisterView.cpp.o -c /home/Ess/Code/Cpp/Essearch/Hermes/src/RegisterView.cpp",
+  "file": "/home/Ess/Code/Cpp/Essearch/Hermes/src/RegisterView.cpp",
+  "output": "CMakeFiles/Hermes.dir/src/RegisterView.cpp.o"
+},
+{
+  "directory": "/home/Ess/Code/Cpp/Essearch/Hermes/out/Debug",
+  "command": "/usr/bin/c++ -DFMT_SHARED -DONLY_C_LOCALE=0 -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -I/home/Ess/Code/Cpp/Essearch/Hermes/include -I/home/Ess/Code/Cpp/Essearch/Hermes/sqlpp11::sqlpp11 -g -std=c++17 -O0 -Wall -pedantic -o CMakeFiles/Hermes.dir/src/Sqlite3.cpp.o -c /home/Ess/Code/Cpp/Essearch/Hermes/src/Sqlite3.cpp",
+  "file": "/home/Ess/Code/Cpp/Essearch/Hermes/src/Sqlite3.cpp",
+  "output": "CMakeFiles/Hermes.dir/src/Sqlite3.cpp.o"
+}
+]

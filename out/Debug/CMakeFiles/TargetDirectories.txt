@@ -1,0 +1,3 @@
+/home/Ess/Code/Cpp/Essearch/Hermes/out/Debug/CMakeFiles/Hermes.dir
+/home/Ess/Code/Cpp/Essearch/Hermes/out/Debug/CMakeFiles/edit_cache.dir
+/home/Ess/Code/Cpp/Essearch/Hermes/out/Debug/CMakeFiles/rebuild_cache.dir

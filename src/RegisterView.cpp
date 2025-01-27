@@ -1,10 +1,18 @@
 #include "../include/RegisterView.h"
 #include "../include/Encrypter.h"
+#include "../include/Eutils.hpp"
 #include <fmt/format.h>
-#include <sqlpp11/sqlite3/connection.h>
+#include <spdlog/sinks/daily_file_sink.h>
+#include <spdlog/spdlog.h>
 
-void save_userinfo(const std::string &hashed_username,
-                   const std::string &hashed_password) {}
+RegisterView::RegisterView(std::shared_ptr<spdlog::logger> logger)
+    : logger(logger), admin_db(std::make_unique<Hermes::Sqlite3>(
+                          logger, "./datas/sqlite3/admin.sqlite3")) {
+  if (logger == nullptr) {
+    CATCH_LOG("日志句柄初始化失败");
+    exit(-1);
+  }
+}
 
 // Register
 crow::response RegisterView::regist(const crow::request &req) {
@@ -13,59 +21,83 @@ crow::response RegisterView::regist(const crow::request &req) {
   std::string username = data["username"].s();
   std::string password = data["password"].s();
 
-  this->username = username;
-  this->password = password;
+  SPDLOG_LOGGER_INFO(logger, "接收到注册请求");
 
   if (!data) {
     // data is empty
     res_data["status"] = 204;
     res_data["message"] = "No Content";
+    SPDLOG_LOGGER_INFO(logger, "接收到空数据");
     // data is empty
-  } else if (!username_is_valid()) {
-    // username is valid
-    res_data["status"] = 400;
-    res_data["message"] = "Invalid Username";
-    // username is valid
-  } else if (!password_is_valid()) {
+  } else if (!password_is_valid(password)) {
     // password is valid
     res_data["status"] = 400;
     res_data["message"] = "Invalid Password";
+    SPDLOG_LOGGER_INFO(logger, "密码不合法");
     // password is valid
   } else {
-    fmt::println("[注册成功]: 账号: <{}> -- 密码: <{}>\n", username, password);
-    // store the info
-    auto hashed_password = Encrypter::hash_message(password);
-    auto hashed_username = Encrypter::hash_message(username);
-    if (!hashed_username or !hashed_password) {
-      res_data["status"] = 400;
-      res_data["message"] = "An Error Occurred When Hashing";
-      return crow::response(res_data);
-    }
-    if (Encrypter::verify_hashed_message(hashed_password.value().c_str(),
-                                         password.c_str()) &&
-        Encrypter::verify_hashed_message(hashed_username.value().c_str(),
-                                         username.c_str())) {
-      fmt::println("[加密成功]: 账号: <{}> -- 密码: <{}>\n",
-                   hashed_username.value(), hashed_password.value());
-    }
-    res_data["cookie"] = "12121";
-    res_data["status"] = 200;
-    res_data["message"] = "Register Successful!";
+    SPDLOG_LOGGER_INFO(logger, "登陆成功");
+    return handle(username, password, res_data);
   }
-  // store the info
   return crow::response(res_data);
 }
 
-// check username whether is valid
-inline bool RegisterView::username_is_valid() {
-  // if (find(encrypt(username))) {
-  //     return false;
-  // }
-  return true;
+crow::response RegisterView::handle(const std::string &username,
+                                    const std::string &password,
+                                    crow::json::wvalue &res_data) {
+  using namespace Hermes;
+  std::optional<std::string> hashed_password{};
+  std::string hashed_password_v{};
+  std::string cookie{};
+
+  SPDLOG_LOGGER_INFO(logger, "[接收到信息]: 账号: <{}> -- 密码: <{}>", username,
+                     password);
+  // store the info
+  // username need not hash
+  hashed_password = Encrypter::hash_password(password);
+
+  // check hashing is successful
+  if (!hashed_password) {
+    res_data["status"] = 400;
+    res_data["message"] = "An Error Occurred When Hashing";
+    SPDLOG_LOGGER_ERROR(logger, "对密码哈希失败");
+    return crow::response(res_data);
+  }
+
+  // get the value
+  hashed_password_v = hashed_password.value();
+  SPDLOG_LOGGER_INFO(logger, "[加密成功]: 账号: <{}> -- 密码: <{}>", username,
+                     hashed_password_v);
+
+  // check username
+  auto res = admin_db->username_in_db(username);
+
+  // occurred an error when query
+  if (!res) {
+    res_data["status"] = 400;
+    res_data["message"] = "An Error Occurred When Quering Username";
+    SPDLOG_LOGGER_ERROR(logger, "查询账号时出现错误");
+    return crow::response(res_data);
+  }
+  // username exists
+  if (res.value() != 0) {
+    res_data["status"] = 302;
+    res_data["message"] = "Username Exists";
+    SPDLOG_LOGGER_INFO(logger, "账号已存在");
+    return crow::response(res_data);
+  }
+
+  // if not exists then save it;
+  admin_db->save_admininfo(username, hashed_password_v);
+  SPDLOG_LOGGER_INFO(logger, "注册成功");
+  res_data["cookie"] = "12121";
+  res_data["status"] = 200;
+  res_data["message"] = "Register Successful!";
+  return crow::response(res_data);
 }
 
 // check password whether is valid
-inline bool RegisterView::password_is_valid() {
+inline bool RegisterView::password_is_valid(const std::string &password) {
   if (password.length() < 8) {
     return false;
   }
@@ -73,4 +105,5 @@ inline bool RegisterView::password_is_valid() {
 }
 
 // store the basic userinfo
-inline void RegisterView::store_userinfo() {}
+inline void RegisterView::store_userinfo(const std::string &username,
+                                         const std::string &hashed_password) {}

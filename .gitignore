@@ -37,6 +37,8 @@
 build/
 
 # Byte-compiled / optimized / DLL files
+
+log/
 __pycache__/
 *.py[cod]
 *$py.class
