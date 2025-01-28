@@ -4,8 +4,10 @@
 #include "crow.h"
 #include <fmt/format.h>
 #include <optional>
+#include <memory>
 #include <spdlog/sinks/daily_file_sink.h>
 #include <spdlog/spdlog.h>
+#include <string>
 
 class LoginView final {
   std::optional<std::string> token{std::nullopt};

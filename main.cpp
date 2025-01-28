@@ -3,6 +3,7 @@
 #include "./include/store.hpp"
 #include <fmt/format.h>
 #include <spdlog/sinks/basic_file_sink.h>
+#include <memory>
 #include <spdlog/spdlog.h>
 
 #define SPFLOG_ACTIVE_LEVEL SPDLOG_LOGGER_TRACE
@@ -10,7 +11,7 @@
 auto get_logger() {
   std::string logger_name{"./logs/Hermes"};
   try {
-    auto regLogger = spdlog::daily_logger_mt(logger_name.c_str(),
+    std::shared_ptr<spdlog::logger> regLogger = spdlog::daily_logger_mt(logger_name.c_str(),
                                              (logger_name + ".log").c_str());
     regLogger->set_pattern(
         "[%n][%Y-%m-%d %H:%M:%S.%e] [%l] [%s %!:%#] [%t] %v");
@@ -36,6 +37,10 @@ inline void run(std::shared_ptr<spdlog::logger> logger) {
   CROW_ROUTE(app, "/login")
       .methods("POST"_method)(
           std::bind(&LoginView::login, &login, std::placeholders::_1));
+
+  CROW_ROUTE(app, "/search")
+      .methods("POST"_method)(
+          [](const crow::request &request) { return crow::response(); });
 
   app.port(17800).run();
 }

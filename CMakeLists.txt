@@ -8,6 +8,8 @@ project(
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CMAKE_C_COMPILER /usr/bin/gcc)
+set(CMAKE_CXX_COMPILE /usr/bin/g++)
 set(CMAKE_SUPPRESS_REGENERATION FALSE)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 17)
@@ -20,9 +22,30 @@ find_package(fmt REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(Sodium REQUIRED)
 find_package(Sqlpp11 REQUIRED CONFIG)
+
 find_package(Sqlpp11SQLite3 REQUIRED CONFIG)
 if(NOT Sqlpp11SQLite3_FOUND)
   message(FATAL_ERROR "Sqlpp11SQLite3 not found!")
+endif()
+
+# # 查找 SQLite3 库 include_directories(/usr/local/include)
+find_package(SQLite3 REQUIRED)
+# 打印找到的 SQLite3 信息（有助于调试）
+message(STATUS "SQLite3 include dirs: ${SQLite3_INCLUDE_DIRS}")
+message(STATUS "SQLite3 libraries: ${SQLite3_LIBRARIES}")
+
+# 分别处理 macos 和 archlinux
+if(APPLE)
+  # 手动设置 macOS SQLite3 安装路径（例如通过 Homebrew） 这个有用
+  include_directories("/opt/homebrew/Cellar/sqlite/3.48.0/include")
+  link_directories("/opt/homebrew/Cellar/sqlite/3.48.0/lib")
+  # 手动设置 macOS spdlog 安装路径
+  include_directories("/opt/homebrew/Cellar/spdlog/1.15.0_1/include")
+  link_directories("/opt/homebrew/Cellar/spdlog/1.15.0_1/lib")
+
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  # 手动设置 Arch Linux 路径（例如通过系统安装） include_directories("/usr/include/sqlite3")
+  # link_directories("/usr/lib")
 endif()
 
 file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp
@@ -31,19 +54,17 @@ file(GLOB_RECURSE INCLUDES ${CMAKE_SOURCE_DIR}/include/*.h)
 
 add_executable(${CMAKE_PROJECT_NAME} main.cpp ${SOURCES})
 
-include_directories(/usr/local/include)
-
 target_link_libraries(
   ${PROJECT_NAME}
   PRIVATE # ${LEVELDB_LIBRARIES}/libleveldb.dylib ${LEVELDB_LIBRARIES} leveldb
           # ${INCLUDES}
-          fmt::fmt ${sodium_LIBRARY_DEBUG} # 手动找到的库路径
+          ${SQLite3_LIBRARIES} fmt::fmt ${sodium_LIBRARY_DEBUG} # 手动找到的库路径
           sqlpp11::sqlpp11 sqlpp11::sqlite3 spdlog::spdlog)
 
 target_include_directories(
   ${PROJECT_NAME}
   PRIVATE ${CMAKE_SOURCE_DIR}/include ${sodium_INCLUDE_DIR} # sodium.h 头文件路径
-          sqlpp11::sqlpp11)
+          sqlpp11::sqlite3 sqlpp11::sqlpp11)
 
 target_compile_options(
   ${PROJECT_NAME}

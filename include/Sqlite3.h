@@ -10,6 +10,7 @@
 #include <sqlpp11/sqlite3/connection.h> // 如果是 SQLite3 数据库
 #include <sqlpp11/sqlite3/sqlite3.h>
 #include <sqlpp11/sqlpp11.h>
+#include <string>
 
 namespace Hermes {
 
